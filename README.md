@@ -28,14 +28,24 @@ pip3 install -r requirements.txt
 
 ## Demo
 
-**Original Image**
+### Original Image
 
 ![Original](img/birb.png)
 
-**Noisy Image**
+### Noisy Image
+
+```bash
+python3 noisify.py birb.png birb_noisy.png -p 0.5
+```
 
 ![Noisy](img/birb_noisy.png)
 
-**Interpolated Image**
+### Interpolated Image
+
+```bash
+python3 interpolate.py birb_noisy.png birb_interpolated.png -E 15
+```
+
+
 
 ![Interpolated](img/birb_interpolated.png)
