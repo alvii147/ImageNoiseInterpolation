@@ -11,7 +11,7 @@ from utils import (
 
 # usage string
 USAGE = 'Usage:'
-USAGE += '\n\median.py src dest '
+USAGE += '\n\tmedian.py src dest '
 USAGE += '[-N window_length]'
 
 if __name__ == '__main__':

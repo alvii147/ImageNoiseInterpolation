@@ -12,7 +12,7 @@ from utils import (
 
 # usage string
 USAGE = 'Usage:'
-USAGE += '\n\interpolate.py src dest '
+USAGE += '\n\tinterpolate.py src dest '
 USAGE += '[-E noise_threshold]'
 
 if __name__ == '__main__':
