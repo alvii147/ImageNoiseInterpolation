@@ -1,5 +1,5 @@
-NoiseInterpolation
-==================
+ImageNoiseInterpolation
+=======================
 
 .. toctree::
    :maxdepth: 4
