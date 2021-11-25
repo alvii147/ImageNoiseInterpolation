@@ -1,3 +1,6 @@
+import sys
+import getopt
+
 from utils import (
     openImage,
     splitChannels,
@@ -7,16 +10,47 @@ from utils import (
     saveImage,
 )
 
-if __name__ == '__main__':
-    path = 'img/birb_noisy.png'
-    dest = 'img/birb_interpolated.png'
+# usage string
+USAGE = 'Usage:'
+USAGE += '\n\interpolate.py src dest '
+USAGE += '[-E noise_threshold]'
 
-    img = openImage(path)
+if __name__ == '__main__':
+    # exit if not enough arguments
+    if len(sys.argv) < 3:
+        print(USAGE)
+        sys.exit(1)
+
+    # image file source
+    src = sys.argv[1]
+    # image file destination
+    dest = sys.argv[2]
+    # window length
+    N = 3
+    # noise threshold
+    E = 53
+
+    # parse command line arguments
+    try:
+        opts, _ = getopt.getopt(sys.argv[3:], 'E:')
+    except getopt.GetoptError:
+        print(USAGE)
+        sys.exit(1)
+
+    for opt, arg in opts:
+        if opt == '-E':
+            try:
+                E = abs(float(arg))
+            except:
+                print('Error: E must be a float in range [0, 255]')
+                print(USAGE)
+                sys.exit(1)
+
+    # open image and split into RGB channels
+    img = openImage(src)
     R, G, B = splitChannels(img)
 
     # get noisy pixels
-    N = 3
-    E = 12
     is_noisy_R = detectNoise(R, N, E=E)
     is_noisy_G = detectNoise(G, N, E=E)
     is_noisy_B = detectNoise(B, N, E=E)
@@ -49,10 +83,10 @@ if __name__ == '__main__':
         is_noisy_G,
     )
 
+    # combine RGB channels and save image
     img = combineChannels(
         R_interpolated,
         G_interpolated,
         B_interpolated,
     )
-
     saveImage(img, dest)
