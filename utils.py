@@ -135,9 +135,9 @@ def addNoise(channel, p=0.5, is_noisy=None):
         if channel_shape != np.shape(is_noisy):
             raise ValueError('channel and is_noisy must be of same shape')
 
-    # random noisy channel
+    # randomize noise array of values 0 or 255
     noise = np.array(
-        np.random.rand(*channel_shape) * 255,
+        np.around(np.random.rand(*channel_shape)) * 255,
         dtype=np.uint8,
     )
 

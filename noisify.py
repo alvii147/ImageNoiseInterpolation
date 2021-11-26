@@ -1,5 +1,6 @@
 import sys
 import getopt
+import numpy as np
 
 from utils import (
     openImage,
@@ -50,9 +51,9 @@ if __name__ == '__main__':
     R, G, B = splitChannels(img)
 
     # add noise to all 3 channels
-    R, is_noisy = addNoise(R, p)
-    G, _ = addNoise(G, p, is_noisy)
-    B, _ = addNoise(B, p, is_noisy)
+    R, _ = addNoise(R, p)
+    G, _ = addNoise(G, p)
+    B, _ = addNoise(B, p)
 
     # combine RGB channels and save image
     img = combineChannels(R, G, B)
