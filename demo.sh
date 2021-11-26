@@ -6,8 +6,8 @@ INTERPOLATED_IMG=img/birb_interpolated.png
 MEDIAN_IMG=img/birb_median.png
 
 echo Adding noise to $ORIGINAL_IMG
-python noisify.py $ORIGINAL_IMG $NOISY_IMG -p 0.4
+python noisify.py $ORIGINAL_IMG $NOISY_IMG -p 0.05
 echo Applying interpolation on $NOISY_IMG
-python interpolate.py $NOISY_IMG $INTERPOLATED_IMG -E 15
+python interpolate.py $NOISY_IMG $INTERPOLATED_IMG -E 53
 echo Applying median filter on $NOISY_IMG
 python median.py $NOISY_IMG $MEDIAN_IMG -N 3
