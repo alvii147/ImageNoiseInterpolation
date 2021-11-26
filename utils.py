@@ -276,9 +276,9 @@ def getCandidate(C, A, idx):
     Candidates are calculated using the following computations:
 
     .. math::
-        \\hat{C}[4] &= \\frac{|C[L] + C[R]|}{2} \\\\
-        \\hat{C}[4] &= \\frac{|C[L] + C[R]|}{4} +
-        \\frac{|-A[L] + 2A[4] - A[R]|}{4}
+        \\hat{C}[4] &= \\frac{C[L] + C[R]}{2} \\\\
+        \\hat{C}[4] &= \\frac{C[L] + C[R]}{2} +
+        \\frac{-A[L] + 2A[4] - A[R]}{2}
     '''
 
     L, R = idx
@@ -286,10 +286,12 @@ def getCandidate(C, A, idx):
     # gradient term
     grad = (int(C[L]) + int(C[R])) / 2
     # laplacian term
-    lap = abs(-int(A[L]) + (2 * int(A[4])) - int(A[R])) / 2
+    lap = (-int(A[L]) + (2 * int(A[4])) - int(A[R])) / 2
 
     candidate_C = np.uint8(grad)
-    candidate_CA = np.uint8((grad + lap) / 2)
+    candidate_CA = np.uint8(
+        max(min((grad + lap), 255), 0)
+    )
 
     return candidate_C, candidate_CA
 
