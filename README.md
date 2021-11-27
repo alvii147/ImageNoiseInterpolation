@@ -35,7 +35,7 @@ pip3 install -r requirements.txt
 ### Noisy Image
 
 ```bash
-python3 noisify.py birb.png birb_noisy.png -p 0.5
+python3 noisify.py birb.png birb_noisy.png -p 0.05
 ```
 
 ![Noisy](img/birb_noisy.png)
