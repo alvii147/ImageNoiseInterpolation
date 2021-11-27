@@ -74,14 +74,16 @@
 <span id="utils"></span><h1>utils<a class="headerlink" href="#module-utils" title="Permalink to this headline"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="utils.addNoise">
-<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">addNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_noisy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.addNoise" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">addNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.47</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.47</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_noisy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.addNoise" title="Permalink to this definition"></a></dt>
 <dd><p>Add randomized noise to channel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<em>numpy.ndarray</em>) – 2-dimensional channel array.</p></li>
-<li><p><strong>p</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of a pixel being converted to noise, should be in the
-range <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1)</span></code>.</p></li>
+<li><p><strong>p1</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of a pixel being converted to positive impulse noise,
+should be in the range <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1)</span></code>.</p></li>
+<li><p><strong>p2</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of a pixel being converted to negative impulse noise,
+should be in the range <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1)</span></code>.</p></li>
 <li><p><strong>is_noisy</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – 2-dimensional boolean array indicating which pixels should be
 converted to noise. If not provided, this is randomized.</p></li>
 </ul>
@@ -95,6 +97,18 @@ have been converted to noise.</p></li>
 </p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>This is an implementation of salt and pepper noise. A color channel
+pixel <span class="math notranslate nohighlight">\(x_k(i, j)\)</span> corrupted by impulsive noise is given by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}x_k(i, j) = \begin{cases}
+    s_k(i, j) &amp; 1 - p_1 - p_2 \\[5pt]
+    255 &amp; p_1 \\[5pt]
+    0 &amp; p_2 \\[5pt]
+\end{cases}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(s_k(i, j)\)</span> is the original noiseless pixel and <span class="math notranslate nohighlight">\(p_1\)</span>
+and <span class="math notranslate nohighlight">\(p_2\)</span> are probabilities of a pixel being positive and
+negative impulsive noise respectively.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -138,6 +152,15 @@ are noisy.</p>
 <dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Noise is detected by comparing each pixel in given <code class="docutils literal notranslate"><span class="pre">channel</span></code> to
+median of <code class="docutils literal notranslate"><span class="pre">NxN</span></code> window surrounding the pixel. A pixel
+<span class="math notranslate nohighlight">\(x_k(i, j)\)</span> is labelled noise if it satisfies the following
+condition:</p>
+<div class="math notranslate nohighlight">
+\[|x_k(i, j) - x_k^{MED}(i, j)| \gt \varepsilon\]</div>
+<p>where <span class="math notranslate nohighlight">\(x_k^{MED}(i, j)\)</span> is the median within the <code class="docutils literal notranslate"><span class="pre">NxN</span></code> window
+and <span class="math notranslate nohighlight">\(\varepsilon\)</span> is the given threshold, <code class="docutils literal notranslate"><span class="pre">E</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -164,9 +187,11 @@ channel windows.</p></li>
 <p class="rubric">Notes</p>
 <p>Candidates are calculated using the following computations:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\hat{C}[4] &amp;= \frac{C[L] + C[R]}{2} \\
-\hat{C}[4] &amp;= \frac{C[L] + C[R]}{2} +
-\frac{-A[L] + 2A[4] - A[R]}{2}\end{split}\]</div>
+\[\begin{split}\hat{C}[4] &amp;= \frac{C[k] + C[l]}{2} \\[5pt]
+\hat{C}[4] &amp;= \frac{C[k] + C[l]}{2} +
+\frac{-A[k] + 2A[4] - A[l]}{2}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(C\)</span> and <span class="math notranslate nohighlight">\(A\)</span> are flattened versions of <code class="docutils literal notranslate"><span class="pre">3x3</span></code> window
+arrays, and <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(l\)</span> are given indices.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -194,8 +219,10 @@ windows.</p></li>
 <p class="rubric">Notes</p>
 <p>Candidates are calculated using the following computations:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\hat{C}_{def}[4] &amp;= |C[L] - C[R]| \\
-\hat{C}_{def}[4] &amp;= ||C[L] - C[R]| - |A[L] - A[R]||\end{split}\]</div>
+\[\begin{split}\hat{C}_{def}[4] &amp;= |C[k] - C[l]| \\[5pt]
+\hat{C}_{def}[4] &amp;= ||C[k] - C[l]| - |A[k] - A[l]||\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(C\)</span> and <span class="math notranslate nohighlight">\(A\)</span> are flattened versions of <code class="docutils literal notranslate"><span class="pre">3x3</span></code> window
+arrays, and <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(l\)</span> are given indices.</p>
 </dd></dl>
 
 <dl class="py function">
