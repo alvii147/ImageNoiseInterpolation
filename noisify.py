@@ -13,7 +13,7 @@ from utils import (
 # usage string
 USAGE = 'Usage:'
 USAGE += '\n\tnoisify.py src dest '
-USAGE += '[-p noise_density]'
+USAGE += '[-p positive_impulse_density] [-n negative_impulse_density]'
 
 if __name__ == '__main__':
     # exit if not enough arguments
@@ -25,12 +25,13 @@ if __name__ == '__main__':
     src = sys.argv[1]
     # image file destination
     dest = sys.argv[2]
-    # noise density
-    p = 0.5
+    # impulsive noise densities
+    p = 0.47
+    n = 0.47
 
     # parse command line arguments
     try:
-        opts, _ = getopt.getopt(sys.argv[3:], 'p:')
+        opts, _ = getopt.getopt(sys.argv[3:], 'p:n:')
     except getopt.GetoptError:
         print(USAGE)
         sys.exit(1)
@@ -39,10 +40,15 @@ if __name__ == '__main__':
         if opt == '-p':
             try:
                 p = float(arg)
-                if p < 0 or p > 1:
-                    raise ValueError
             except:
-                print('Error: p must be a float in range [0, 1]')
+                print('Error: p must be a float in range [0, 1)')
+                print(USAGE)
+                sys.exit(1)
+        elif opt == '-n':
+            try:
+                n = float(arg)
+            except:
+                print('Error: n must be a float in range [0, 1)')
                 print(USAGE)
                 sys.exit(1)
 
@@ -51,9 +57,9 @@ if __name__ == '__main__':
     R, G, B = splitChannels(img)
 
     # add noise to all 3 channels
-    R, _ = addNoise(R, p)
-    G, _ = addNoise(G, p)
-    B, _ = addNoise(B, p)
+    R, _ = addNoise(R, p1=p, p2=n)
+    G, _ = addNoise(G, p1=p, p2=n)
+    B, _ = addNoise(B, p1=p, p2=n)
 
     # combine RGB channels and save image
     img = combineChannels(R, G, B)

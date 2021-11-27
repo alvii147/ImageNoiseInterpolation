@@ -98,7 +98,7 @@ def combineChannels(R, G, B):
 
     return img
 
-def addNoise(channel, p=0.5, is_noisy=None):
+def addNoise(channel, p1=0.47, p2=0.47, is_noisy=None):
     '''
     Add randomized noise to channel.
 
@@ -106,9 +106,12 @@ def addNoise(channel, p=0.5, is_noisy=None):
     ----------
     channel : numpy.ndarray
         2-dimensional channel array.
-    p : float, optional
-        Probability of a pixel being converted to noise, should be in the
-        range ``[0, 1)``.
+    p1 : float, optional
+        Probability of a pixel being converted to positive impulse noise,
+        should be in the range ``[0, 1)``.
+    p2 : float, optional
+        Probability of a pixel being converted to negative impulse noise,
+        should be in the range ``[0, 1)``.
     is_noisy : numpy.ndarray, optional
         2-dimensional boolean array indicating which pixels should be
         converted to noise. If not provided, this is randomized.
@@ -120,7 +123,29 @@ def addNoise(channel, p=0.5, is_noisy=None):
     is_noisy : numpy.ndarray
         Boolean array of same shape as ``channel``, indicating which pixels
         have been converted to noise.
+
+    Notes
+    -----
+    This is an implementation of salt and pepper noise. A color channel
+    pixel :math:`x_k(i, j)` corrupted by impulsive noise is given by:
+
+    .. math::
+        x_k(i, j) = \\begin{cases}
+            s_k(i, j) & 1 - p_1 - p_2 \\\\[5pt]
+            255 & p_1 \\\\[5pt]
+            0 & p_2 \\\\[5pt]
+        \\end{cases}
+
+    where :math:`s_k(i, j)` is the original noiseless pixel and :math:`p_1`
+    and :math:`p_2` are probabilities of a pixel being positive and
+    negative impulsive noise respectively.
     '''
+
+    # if probabilities are not between 0 and 1, raise error
+    if p1 < 0 or p1 >= 1 or p2 < 0 or p2 >= 1 or p1 + p2 >= 1:
+        err_msg = 'p1, p2 must be in range [0, 1), and '
+        err_msg += 'p1 + p2 must not exceed 1'
+        raise ValueError(err_msg)
 
     noisy_channel = channel.copy()
     channel_shape = np.shape(noisy_channel)
@@ -128,7 +153,7 @@ def addNoise(channel, p=0.5, is_noisy=None):
     # if is_noisy is not specified, randomize it
     if is_noisy is None:
         is_noisy = np.array(
-            np.random.rand(*channel_shape) < p,
+            np.random.rand(*channel_shape) < 1 - p1 - p2,
             dtype=bool,
         )
     else:
@@ -137,7 +162,7 @@ def addNoise(channel, p=0.5, is_noisy=None):
 
     # randomize noise array of values 0 or 255
     noise = np.array(
-        np.around(np.random.rand(*channel_shape)) * 255,
+        (np.random.rand(*channel_shape) < p1 / (p1 + p2)) * 255,
         dtype=np.uint8,
     )
 
@@ -227,6 +252,19 @@ def detectNoise(channel, N, E=53):
     numpy.ndarray
         Boolean array of same shape as ``channel``, indicating which pixels
         are noisy.
+
+    Notes
+    -----
+    Noise is detected by comparing each pixel in given ``channel`` to
+    median of ``NxN`` window surrounding the pixel. A pixel
+    :math:`x_k(i, j)` is labelled noise if it satisfies the following
+    condition:
+
+    .. math::
+        |x_k(i, j) - x_k^{MED}(i, j)| \\gt \\varepsilon
+
+    where :math:`x_k^{MED}(i, j)` is the median within the ``NxN`` window
+    and :math:`\\varepsilon` is the given threshold, ``E``.
     '''
 
     # N must be odd since we use centre pixel in each window
@@ -276,17 +314,20 @@ def getCandidate(C, A, idx):
     Candidates are calculated using the following computations:
 
     .. math::
-        \\hat{C}[4] &= \\frac{C[L] + C[R]}{2} \\\\
-        \\hat{C}[4] &= \\frac{C[L] + C[R]}{2} +
-        \\frac{-A[L] + 2A[4] - A[R]}{2}
+        \\hat{C}[4] &= \\frac{C[k] + C[l]}{2} \\\\[5pt]
+        \\hat{C}[4] &= \\frac{C[k] + C[l]}{2} +
+        \\frac{-A[k] + 2A[4] - A[l]}{2}
+
+    where :math:`C` and :math:`A` are flattened versions of ``3x3`` window
+    arrays, and :math:`k` and :math:`l` are given indices.
     '''
 
-    L, R = idx
+    k, l = idx
 
     # gradient term
-    grad = (int(C[L]) + int(C[R])) / 2
+    grad = (int(C[k]) + int(C[l])) / 2
     # laplacian term
-    lap = (-int(A[L]) + (2 * int(A[4])) - int(A[R])) / 2
+    lap = (-int(A[k]) + (2 * int(A[4])) - int(A[l])) / 2
 
     candidate_C = np.uint8(grad)
     candidate_CA = np.uint8(
@@ -326,20 +367,20 @@ def getValidity(is_noisy_C, is_noisy_A, idx):
     considered invalid.
     '''
 
-    L, R = idx
+    k, l = idx
 
     # validity using only C channel
     validity_C = (
-        (not is_noisy_C[L]) and
-        (not is_noisy_C[R])
+        (not is_noisy_C[k]) and
+        (not is_noisy_C[l])
     )
 
     # validity using C and A channels
     validity_CA = (
         validity_C and
-        (not is_noisy_A[L]) and
+        (not is_noisy_A[k]) and
         (not is_noisy_A[4]) and
-        (not is_noisy_A[R])
+        (not is_noisy_A[l])
     )
 
     return validity_C, validity_CA
@@ -371,17 +412,20 @@ def getDeference(C, A, idx):
     Candidates are calculated using the following computations:
 
     .. math::
-        \\hat{C}_{def}[4] &= |C[L] - C[R]| \\\\
-        \\hat{C}_{def}[4] &= ||C[L] - C[R]| - |A[L] - A[R]||
+        \\hat{C}_{def}[4] &= |C[k] - C[l]| \\\\[5pt]
+        \\hat{C}_{def}[4] &= ||C[k] - C[l]| - |A[k] - A[l]||
+
+    where :math:`C` and :math:`A` are flattened versions of ``3x3`` window
+    arrays, and :math:`k` and :math:`l` are given indices.
     '''
 
-    L, R = idx
+    k, l = idx
 
     # deference using only C channel
-    deference_C = abs(int(C[L]) - int(C[R]))
+    deference_C = abs(int(C[k]) - int(C[l]))
     # deference using C and A channels
     deference_CA = abs(
-        deference_C - abs(int(A[L]) - int(A[R]))
+        deference_C - abs(int(A[k]) - int(A[l]))
     )
 
     return deference_C, deference_CA
