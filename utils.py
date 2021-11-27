@@ -263,9 +263,12 @@ def getThreshold(mean_of_median, E1, E2, Imin, Imax):
     .. math::
         \\varepsilon = \\begin{cases}
             \\varepsilon_1, & \\bar{x}_k^{MED}(i, j) \gt I_{max} \\:\\:
-            \\text{or} \\bar{x}_k^{MED}(i, j) \lt I_{min} \\\\[5pt]
+            \\text{or} \\:\\: \\bar{x}_k^{MED}(i, j) \lt I_{min} \\\\[5pt]
             \\varepsilon_2, & \\:\\: \\text{otherwise}
         \\end{cases}
+
+    where :math:`\\bar{x}_k^{MED}(i, j)` is the average value of medians in all three
+    channel windows.
     '''
 
     if mean_of_median < Imin or mean_of_median > Imax:
@@ -642,7 +645,7 @@ def interpolateChannel(C, A1, A2, is_noisy_C, is_noisy_A1, is_noisy_A2):
 
     Returns
     -------
-    int
+    numpy.ndarray
         Interpolated primary channel.
     '''
 

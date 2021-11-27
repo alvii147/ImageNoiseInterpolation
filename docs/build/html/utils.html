@@ -104,7 +104,7 @@ pixel <span class="math notranslate nohighlight">\(x_k(i, j)\)</span> corrupted 
 \[\begin{split}x_k(i, j) = \begin{cases}
     s_k(i, j) &amp; 1 - p_1 - p_2 \\[5pt]
     255 &amp; p_1 \\[5pt]
-    0 &amp; p_2 \\[5pt]
+    0 &amp; p_2
 \end{cases}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(s_k(i, j)\)</span> is the original noiseless pixel and <span class="math notranslate nohighlight">\(p_1\)</span>
 and <span class="math notranslate nohighlight">\(p_2\)</span> are probabilities of a pixel being positive and
@@ -134,14 +134,19 @@ negative impulsive noise respectively.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="utils.detectNoise">
-<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">detectNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">53</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.detectNoise" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">detectNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">53</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Imin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Imax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">205</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.detectNoise" title="Permalink to this definition"></a></dt>
 <dd><p>Identify noisy pixels in channel array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>channel</strong> (<em>numpy.ndarray</em>) – 2-dimensional channel array.</p></li>
+<li><p><strong>C</strong> (<em>numpy.ndarray</em>) – Primary channel array window.</p></li>
+<li><p><strong>A1</strong> (<em>numpy.ndarray</em>) – Secondary channel array 1 window.</p></li>
+<li><p><strong>A2</strong> (<em>numpy.ndarray</em>) – Secondary channel array 2 window.</p></li>
 <li><p><strong>N</strong> (<em>int</em>) – Window length. Must be odd.</p></li>
-<li><p><strong>E</strong> (<em>int</em>) – Noise threshold value.</p></li>
+<li><p><strong>E1</strong> (<em>int</em>) – Noise threshold value 1.</p></li>
+<li><p><strong>E2</strong> (<em>int</em>) – Noise threshold value 2.</p></li>
+<li><p><strong>Imin</strong> (<em>int</em>) – Minumum threshold for mean of median.</p></li>
+<li><p><strong>Imax</strong> (<em>int</em>) – Maximum threshold for mean of median.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -153,14 +158,16 @@ are noisy.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Noise is detected by comparing each pixel in given <code class="docutils literal notranslate"><span class="pre">channel</span></code> to
+<p>Noise is detected by comparing each pixel in given channel <code class="docutils literal notranslate"><span class="pre">C</span></code> to
 median of <code class="docutils literal notranslate"><span class="pre">NxN</span></code> window surrounding the pixel. A pixel
 <span class="math notranslate nohighlight">\(x_k(i, j)\)</span> is labelled noise if it satisfies the following
 condition:</p>
 <div class="math notranslate nohighlight">
 \[|x_k(i, j) - x_k^{MED}(i, j)| \gt \varepsilon\]</div>
 <p>where <span class="math notranslate nohighlight">\(x_k^{MED}(i, j)\)</span> is the median within the <code class="docutils literal notranslate"><span class="pre">NxN</span></code> window
-and <span class="math notranslate nohighlight">\(\varepsilon\)</span> is the given threshold, <code class="docutils literal notranslate"><span class="pre">E</span></code>.</p>
+and <span class="math notranslate nohighlight">\(\varepsilon\)</span> is threshold, <code class="docutils literal notranslate"><span class="pre">E</span></code>, which is calculated using
+<code class="docutils literal notranslate"><span class="pre">E1</span></code>, <code class="docutils literal notranslate"><span class="pre">E2</span></code>, <code class="docutils literal notranslate"><span class="pre">Imin</span></code> and <code class="docutils literal notranslate"><span class="pre">Imax</span></code>. For more information, see
+<code class="docutils literal notranslate"><span class="pre">getThreshold()</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -226,6 +233,39 @@ arrays, and <span class="math notranslate nohighlight">\(k\)</span> and <span cl
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="utils.getThreshold">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">getThreshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean_of_median</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Imin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Imax</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.getThreshold" title="Permalink to this definition"></a></dt>
+<dd><p>Identify noisy pixels in channel array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean_of_median</strong> (<em>float</em>) – Average value of medians of <code class="docutils literal notranslate"><span class="pre">NxN</span></code> windows of all three channels.</p></li>
+<li><p><strong>E1</strong> (<em>int</em>) – Noise threshold value 1.</p></li>
+<li><p><strong>E2</strong> (<em>int</em>) – Noise threshold value 2.</p></li>
+<li><p><strong>Imin</strong> (<em>int</em>) – Minumum threshold for mean of median.</p></li>
+<li><p><strong>Imax</strong> (<em>int</em>) – Maximum threshold for mean of median.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Noise threshold value to be used to detect noise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p><code class="docutils literal notranslate"><span class="pre">E</span></code> is calculated using the following formula:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\varepsilon = \begin{cases}
+    \varepsilon_1, &amp; \bar{x}_k^{MED}(i, j) \gt I_{max} \:\:
+    \text{or} \:\: \bar{x}_k^{MED}(i, j) \lt I_{min} \\[5pt]
+    \varepsilon_2, &amp; \:\: \text{otherwise}
+\end{cases}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\bar{x}_k^{MED}(i, j)\)</span> is the average value of medians in all three
+channel windows.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="utils.getValidity">
 <span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">getValidity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_noisy_C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_noisy_A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.getValidity" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate validity of candidate for interpolated pixel using given
@@ -277,7 +317,7 @@ are noisy.</p></li>
 <dd class="field-even"><p>Interpolated primary channel.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>int</p>
+<dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
