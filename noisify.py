@@ -1,6 +1,5 @@
 import sys
 import getopt
-import numpy as np
 
 from utils import (
     openImage,
@@ -12,8 +11,8 @@ from utils import (
 
 # usage string
 USAGE = 'Usage:'
-USAGE += '\n\tnoisify.py src dest '
-USAGE += '[-p positive_impulse_density] [-n negative_impulse_density]'
+USAGE += '\n\tnoisify.py <SRC_PATH> <DEST_PATH>'
+USAGE += '[-p POSITIVE_IMPULSE_DENSITY] [-n NEGATIVE_IMPULSE_DENSITY]'
 
 if __name__ == '__main__':
     # exit if not enough arguments

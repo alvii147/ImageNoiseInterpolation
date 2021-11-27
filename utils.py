@@ -133,7 +133,7 @@ def addNoise(channel, p1=0.47, p2=0.47, is_noisy=None):
         x_k(i, j) = \\begin{cases}
             s_k(i, j) & 1 - p_1 - p_2 \\\\[5pt]
             255 & p_1 \\\\[5pt]
-            0 & p_2 \\\\[5pt]
+            0 & p_2
         \\end{cases}
 
     where :math:`s_k(i, j)` is the original noiseless pixel and :math:`p_1`
@@ -234,18 +234,69 @@ def slidingWindowOperation(channel, window_shape, op='mean'):
 
     return output
 
-def detectNoise(channel, N, E=53):
+def getThreshold(mean_of_median, E1, E2, Imin, Imax):
     '''
     Identify noisy pixels in channel array.
 
     Parameters
     ----------
-    channel : numpy.ndarray
-        2-dimensional channel array.
+    mean_of_median : float
+        Average value of medians of ``NxN`` windows of all three channels.
+    E1 : int
+        Noise threshold value 1.
+    E2 : int
+        Noise threshold value 2.
+    Imin : int
+        Minumum threshold for mean of median.
+    Imax : int
+        Maximum threshold for mean of median.
+
+    Returns
+    -------
+    int
+        Noise threshold value to be used to detect noise.
+
+    Notes
+    -----
+    ``E`` is calculated using the following formula:
+
+    .. math::
+        \\varepsilon = \\begin{cases}
+            \\varepsilon_1, & \\bar{x}_k^{MED}(i, j) \gt I_{max} \\:\\:
+            \\text{or} \\bar{x}_k^{MED}(i, j) \lt I_{min} \\\\[5pt]
+            \\varepsilon_2, & \\:\\: \\text{otherwise}
+        \\end{cases}
+    '''
+
+    if mean_of_median < Imin or mean_of_median > Imax:
+        E = E1
+    else:
+        E = E2
+
+    return E
+
+def detectNoise(C, A1, A2, N=3, E1=53, E2=25, Imin=50, Imax=205):
+    '''
+    Identify noisy pixels in channel array.
+
+    Parameters
+    ----------
+    C : numpy.ndarray
+        Primary channel array window.
+    A1 : numpy.ndarray
+        Secondary channel array 1 window.
+    A2 : numpy.ndarray
+        Secondary channel array 2 window.
     N : int
         Window length. Must be odd.
-    E : int
-        Noise threshold value.
+    E1 : int
+        Noise threshold value 1.
+    E2 : int
+        Noise threshold value 2.
+    Imin : int
+        Minumum threshold for mean of median.
+    Imax : int
+        Maximum threshold for mean of median.
 
     Returns
     -------
@@ -255,7 +306,7 @@ def detectNoise(channel, N, E=53):
 
     Notes
     -----
-    Noise is detected by comparing each pixel in given ``channel`` to
+    Noise is detected by comparing each pixel in given channel ``C`` to
     median of ``NxN`` window surrounding the pixel. A pixel
     :math:`x_k(i, j)` is labelled noise if it satisfies the following
     condition:
@@ -264,7 +315,9 @@ def detectNoise(channel, N, E=53):
         |x_k(i, j) - x_k^{MED}(i, j)| \\gt \\varepsilon
 
     where :math:`x_k^{MED}(i, j)` is the median within the ``NxN`` window
-    and :math:`\\varepsilon` is the given threshold, ``E``.
+    and :math:`\\varepsilon` is threshold, ``E``, which is calculated using
+    ``E1``, ``E2``, ``Imin`` and ``Imax``. For more information, see
+    ``getThreshold()``.
     '''
 
     # N must be odd since we use centre pixel in each window
@@ -272,18 +325,29 @@ def detectNoise(channel, N, E=53):
         raise ValueError('N must be an odd integer')
 
     # compute median by window
-    median = slidingWindowOperation(channel, N, 'median')
-    median_shape = np.shape(median)
+    C_median = slidingWindowOperation(C, N, 'median')
+    A1_median = slidingWindowOperation(A1, N, 'median')
+    A2_median = slidingWindowOperation(A2, N, 'median')
+    median_shape = np.shape(C_median)
 
-    channel_shape = np.shape(channel)
-    is_noisy = np.zeros(channel_shape, dtype=bool)
+    C_shape = np.shape(C)
+    is_noisy = np.zeros(C_shape, dtype=bool)
 
     # create noisy pixels array based on threshold values
     for i in range(median_shape[0]):
         for j in range(median_shape[1]):
+            # compute mean of median pixel among all three channels
+            mean_of_median = (
+                (C_median[i, j] + A1_median[i, j] + A2_median[i, j]) / 3
+            )
+
+            # get threshold value
+            E = getThreshold(mean_of_median, E1, E2, Imin, Imax)
+
             offset_i = i + (N // 2)
             offset_j = j + (N // 2)
-            if abs(channel[offset_i, offset_j] - median[i, j]) > E:
+            # label pixel as noisy if threshold is exceeded
+            if abs(C[offset_i, offset_j] - C_median[i, j]) > E:
                 is_noisy[offset_i, offset_j] = True
 
     return is_noisy
@@ -611,4 +675,4 @@ def interpolateChannel(C, A1, A2, is_noisy_C, is_noisy_A1, is_noisy_A2):
                     is_noisy_A2[i_win[0] : i_win[1], j_win[0] : j_win[1]],
                 )
 
-    return C_interpolated
+    return C_interpolated[1 : -1, 1 : -1]

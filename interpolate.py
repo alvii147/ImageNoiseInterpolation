@@ -1,5 +1,4 @@
 import sys
-import getopt
 
 from utils import (
     openImage,
@@ -12,8 +11,7 @@ from utils import (
 
 # usage string
 USAGE = 'Usage:'
-USAGE += '\n\tinterpolate.py src dest '
-USAGE += '[-E noise_threshold]'
+USAGE += '\n\tinterpolate.py <SRC_PATH> <DEST_PATH>'
 
 if __name__ == '__main__':
     # exit if not enough arguments
@@ -27,33 +25,15 @@ if __name__ == '__main__':
     dest = sys.argv[2]
     # window length
     N = 3
-    # noise threshold
-    E = 53
-
-    # parse command line arguments
-    try:
-        opts, _ = getopt.getopt(sys.argv[3:], 'E:')
-    except getopt.GetoptError:
-        print(USAGE)
-        sys.exit(1)
-
-    for opt, arg in opts:
-        if opt == '-E':
-            try:
-                E = abs(float(arg))
-            except:
-                print('Error: E must be a float in range [0, 255]')
-                print(USAGE)
-                sys.exit(1)
 
     # open image and split into RGB channels
     img = openImage(src)
     R, G, B = splitChannels(img)
 
     # get noisy pixels
-    is_noisy_R = detectNoise(R, N, E=E)
-    is_noisy_G = detectNoise(G, N, E=E)
-    is_noisy_B = detectNoise(B, N, E=E)
+    is_noisy_R = detectNoise(R, G, B, N)
+    is_noisy_G = detectNoise(G, R, B, N)
+    is_noisy_B = detectNoise(B, R, G, N)
 
     # interpolate noisy pixels
     R_interpolated = interpolateChannel(
