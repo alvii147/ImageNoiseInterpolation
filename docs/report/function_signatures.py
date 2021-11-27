@@ -4,7 +4,7 @@ PREFIX_COLOR = 'blue'
 NAME_COLOR = 'orange'
 PARAM_COLOR = 'darkblue'
 PARAM_VALUE_COLOR = 'red'
-SIGNATURE_FONT_SIZE = '16pt'
+SIGNATURE_FONT_SIZE = '15pt'
 MAIN_FONT_FAMILY = 'monospace'
 MAIN_FONT_WEIGHT = 'bold'
 
