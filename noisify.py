@@ -25,8 +25,8 @@ if __name__ == '__main__':
     # image file destination
     dest = sys.argv[2]
     # impulsive noise densities
-    p = 0.47
-    n = 0.47
+    p = 0.02
+    n = 0.02
 
     # parse command line arguments
     try:

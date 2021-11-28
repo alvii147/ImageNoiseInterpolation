@@ -98,7 +98,7 @@ def combineChannels(R, G, B):
 
     return img
 
-def addNoise(channel, p1=0.47, p2=0.47, is_noisy=None):
+def addNoise(channel, p1=0.02, p2=0.02, is_noisy=None):
     '''
     Add randomized noise to channel.
 
@@ -131,9 +131,9 @@ def addNoise(channel, p1=0.47, p2=0.47, is_noisy=None):
 
     .. math::
         x_k(i, j) = \\begin{cases}
-            s_k(i, j) & 1 - p_1 - p_2 \\\\[5pt]
-            255 & p_1 \\\\[5pt]
-            0 & p_2
+            s_k(i, j), & 1 - p_1 - p_2 \\\\[5pt]
+            255, & p_1 \\\\[5pt]
+            0, & p_2
         \\end{cases}
 
     where :math:`s_k(i, j)` is the original noiseless pixel and :math:`p_1`
@@ -153,7 +153,7 @@ def addNoise(channel, p1=0.47, p2=0.47, is_noisy=None):
     # if is_noisy is not specified, randomize it
     if is_noisy is None:
         is_noisy = np.array(
-            np.random.rand(*channel_shape) < 1 - p1 - p2,
+            np.random.rand(*channel_shape) < p1 + p2,
             dtype=bool,
         )
     else:
@@ -262,8 +262,8 @@ def getThreshold(mean_of_median, E1, E2, Imin, Imax):
 
     .. math::
         \\varepsilon = \\begin{cases}
-            \\varepsilon_1, & \\bar{x}_k^{MED}(i, j) \gt I_{max} \\:\\:
-            \\text{or} \\:\\: \\bar{x}_k^{MED}(i, j) \lt I_{min} \\\\[5pt]
+            \\varepsilon_1, & \\bar{x}_k^{MED}(i, j) \\gt I_{max} \\:\\:
+            \\text{or} \\:\\: \\bar{x}_k^{MED}(i, j) \\lt I_{min} \\\\[5pt]
             \\varepsilon_2, & \\:\\: \\text{otherwise}
         \\end{cases}
 
