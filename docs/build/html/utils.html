@@ -74,7 +74,7 @@
 <span id="utils"></span><h1>utils<a class="headerlink" href="#module-utils" title="Permalink to this headline"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="utils.addNoise">
-<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">addNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.47</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.47</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_noisy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.addNoise" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">addNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_noisy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.addNoise" title="Permalink to this definition"></a></dt>
 <dd><p>Add randomized noise to channel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -102,9 +102,9 @@ have been converted to noise.</p></li>
 pixel <span class="math notranslate nohighlight">\(x_k(i, j)\)</span> corrupted by impulsive noise is given by:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}x_k(i, j) = \begin{cases}
-    s_k(i, j) &amp; 1 - p_1 - p_2 \\[5pt]
-    255 &amp; p_1 \\[5pt]
-    0 &amp; p_2
+    s_k(i, j), &amp; 1 - p_1 - p_2 \\[5pt]
+    255, &amp; p_1 \\[5pt]
+    0, &amp; p_2
 \end{cases}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(s_k(i, j)\)</span> is the original noiseless pixel and <span class="math notranslate nohighlight">\(p_1\)</span>
 and <span class="math notranslate nohighlight">\(p_2\)</span> are probabilities of a pixel being positive and
