@@ -235,7 +235,7 @@ arrays, and <span class="math notranslate nohighlight">\(k\)</span> and <span cl
 <dl class="py function">
 <dt class="sig sig-object py" id="utils.getThreshold">
 <span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">getThreshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean_of_median</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Imin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Imax</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.getThreshold" title="Permalink to this definition"></a></dt>
-<dd><p>Identify noisy pixels in channel array.</p>
+<dd><p>Compute threshold value for noise detection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -351,6 +351,56 @@ array 2 are noisy.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="utils.meanSquaredError">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">meanSquaredError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_actual</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_estimated</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.meanSquaredError" title="Permalink to this definition"></a></dt>
+<dd><p>Perform mean-squared error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_actual</strong> (<em>numpy.ndarray</em>) – Actual array.</p></li>
+<li><p><strong>x_estimated</strong> (<em>numpy.ndarray</em>) – Estimated array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Mean-squared error value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Mean-squared error is computed using the following formula:</p>
+<div class="math notranslate nohighlight">
+\[MSE(x_{actual}, x_{estimated}) =
+\frac{1}{N} \sum\limits_i (x_{actual} - x_{estimated})^2\]</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.normalizedMeanSquaredError">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">normalizedMeanSquaredError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_actual</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_estimated</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.normalizedMeanSquaredError" title="Permalink to this definition"></a></dt>
+<dd><p>Perform normalized mean-squared error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_actual</strong> (<em>numpy.ndarray</em>) – Actual array.</p></li>
+<li><p><strong>x_estimated</strong> (<em>numpy.ndarray</em>) – Estimated array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normalized mean-squared error value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Mean-squared error is computed using the following formula:</p>
+<div class="math notranslate nohighlight">
+\[NMSE(x_{actual}, x_{estimated}) =
+\frac{MSE(x_{actual}, x_{estimated})}{NMSE(x_{actual}, 0)}\]</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="utils.openImage">
 <span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">openImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.openImage" title="Permalink to this definition"></a></dt>
 <dd><p>Open image from given <code class="docutils literal notranslate"><span class="pre">path</span></code> and split into RGB channels.</p>
@@ -371,7 +421,7 @@ array 2 are noisy.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="utils.saveImage">
 <span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">saveImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.saveImage" title="Permalink to this definition"></a></dt>
-<dd><p>Open image from given <code class="docutils literal notranslate"><span class="pre">path</span></code> and split into RGB channels.</p>
+<dd><p>Save image at given <code class="docutils literal notranslate"><span class="pre">path</span></code> and split into RGB channels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

@@ -13,6 +13,7 @@ from utils import (
     splitChannels,
     addNoise,
     detectNoise,
+    normalizedMeanSquaredError,
     interpolateChannel,
     combineChannels,
 )
@@ -87,15 +88,15 @@ plt.savefig('img/noisy_plot.png')
 
 # /////////////////////////////////////////////////////////////////////////
 
-detected_noise_R = detectNoise(R_noisy, G_noisy, B_noisy)
-detected_noise_G = detectNoise(G_noisy, R_noisy, B_noisy)
-detected_noise_B = detectNoise(B_noisy, R_noisy, G_noisy)
+detected_noise_R = detectNoise(C=R_noisy, A1=G_noisy, A2=B_noisy)
+detected_noise_G = detectNoise(C=G_noisy, A1=R_noisy, A2=B_noisy)
+detected_noise_B = detectNoise(C=B_noisy, A1=R_noisy, A2=G_noisy)
 
 # /////////////////////////////////////////////////////////////////////////
 
 fig, axis = plt.subplots(2, 3)
-fig.set_figheight(6)
-fig.set_figwidth(12)
+fig.set_figheight(7)
+fig.set_figwidth(10)
 
 axis[0, 0].imshow(is_noisy_R, cmap='magma', interpolation='nearest')
 axis[0, 0].set_title('Actual Noise (R)')
@@ -146,6 +147,8 @@ B_interpolated = interpolateChannel(
     detected_noise_G,
 )
 
+# /////////////////////////////////////////////////////////////////////////
+
 interpolated_img = combineChannels(
     R_interpolated,
     G_interpolated,
@@ -159,52 +162,73 @@ B_interpolated_img = combineChannels(Z, Z, B_interpolated)
 
 # /////////////////////////////////////////////////////////////////////////
 
-fig, axis = plt.subplots(1, 4)
-fig.set_figheight(3)
-fig.set_figwidth(12)
+fig, axis = plt.subplots(2, 2)
+fig.set_figheight(7)
+fig.set_figwidth(7)
 
-axis[0].imshow(interpolated_img, interpolation='nearest')
-axis[0].set_title('Interpolated')
+axis[0, 0].imshow(interpolated_img, interpolation='nearest')
+axis[0, 0].set_title('Interpolated')
 
-axis[1].imshow(R_interpolated_img, interpolation='nearest')
-axis[1].set_title('Interpolated (R)')
+axis[0, 1].imshow(R_interpolated_img, interpolation='nearest')
+axis[0, 1].set_title('Interpolated (R)')
 
-axis[2].imshow(G_interpolated_img, interpolation='nearest')
-axis[2].set_title('Interpolated (G)')
+axis[1, 0].imshow(G_interpolated_img, interpolation='nearest')
+axis[1, 0].set_title('Interpolated (G)')
 
-axis[3].imshow(B_interpolated_img, interpolation='nearest')
-axis[3].set_title('Interpolated (B)')
+axis[1, 1].imshow(B_interpolated_img, interpolation='nearest')
+axis[1, 1].set_title('Interpolated (B)')
 
 plt.savefig('img/interpolated_plot.png')
 
 # /////////////////////////////////////////////////////////////////////////
 
-fig, axis = plt.subplots(2, 4)
+fig, axis = plt.subplots(1, 2)
 fig.set_figheight(6)
 fig.set_figwidth(12)
 
-axis[0, 0].imshow(noisy_img, interpolation='nearest')
-axis[0, 0].set_title('Impulsive Noise')
+axis[0].imshow(noisy_img, interpolation='nearest')
+axis[0].set_title('Impulsive Noise')
 
-axis[0, 1].imshow(R_noisy_img, interpolation='nearest')
-axis[0, 1].set_title('Impulsive Noise (R)')
-
-axis[0, 2].imshow(G_noisy_img, interpolation='nearest')
-axis[0, 2].set_title('Impulsive Noise (G)')
-
-axis[0, 3].imshow(B_noisy_img, interpolation='nearest')
-axis[0, 3].set_title('Impulsive Noise (B)')
-
-axis[1, 0].imshow(interpolated_img, interpolation='nearest')
-axis[1, 0].set_title('Interpolated')
-
-axis[1, 1].imshow(R_interpolated_img, interpolation='nearest')
-axis[1, 1].set_title('Interpolated (R)')
-
-axis[1, 2].imshow(G_interpolated_img, interpolation='nearest')
-axis[1, 2].set_title('Interpolated (G)')
-
-axis[1, 3].imshow(B_interpolated_img, interpolation='nearest')
-axis[1, 3].set_title('Interpolated (B)')
+axis[1].imshow(interpolated_img, interpolation='nearest')
+axis[1].set_title('Interpolated')
 
 plt.savefig('img/comparison_plot.png')
+
+# /////////////////////////////////////////////////////////////////////////
+
+print('NMSE(Original, Noisy) [R]\t\t',
+    normalizedMeanSquaredError(
+        R,
+        R_noisy,
+    )
+)
+print('NMSE(Original, Noisy) [G]\t\t',
+    normalizedMeanSquaredError(
+        G,
+        G_noisy,
+    )
+)
+print('NMSE(Original, Noisy) [B]\t\t',
+    normalizedMeanSquaredError(
+        B,
+        B_noisy,
+    )
+)
+print('\nNMSE(Original, Interpolated) [R]\t',
+    normalizedMeanSquaredError(
+        R[1 : -1, 1 : -1],
+        R_interpolated,
+    )
+)
+print('NMSE(Original, Interpolated) [G]\t',
+    normalizedMeanSquaredError(
+        G[1 : -1, 1 : -1],
+        G_interpolated,
+    )
+)
+print('NMSE(Original, Interpolated) [B]\t',
+    normalizedMeanSquaredError(
+        B[1 : -1, 1 : -1],
+        B_interpolated,
+    )
+)

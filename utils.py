@@ -1,6 +1,83 @@
 import numpy as np
 from PIL import Image
 
+def meanSquaredError(x_actual, x_estimated):
+    '''
+    Perform mean-squared error.
+
+    Parameters
+    ----------
+    x_actual : numpy.ndarray
+        Actual array.
+    x_estimated : numpy.ndarray
+        Estimated array.
+
+    Returns
+    -------
+    float
+        Mean-squared error value.
+
+    Notes
+    -----
+    Mean-squared error is computed using the following formula:
+
+    .. math::
+        MSE(x_{actual}, x_{estimated}) =
+        \\frac{1}{N} \sum\limits_i (x_{actual} - x_{estimated})^2
+    '''
+
+    x_actual_shape = np.shape(x_actual)
+    x_estimated_shape = np.shape(x_estimated)
+
+    if len(x_actual_shape) != 2 or len(x_estimated_shape) != 2:
+        raise ValueError('x_actual and x_estimated must be 2-dimensional')
+
+    N = x_actual_shape[0] * x_actual_shape[1]
+    MSE = np.linalg.norm(
+        (
+            np.array(x_actual, dtype=np.int64) -
+            np.array(x_estimated, dtype=np.int64)
+        )
+    ) / N
+
+    return MSE
+
+def normalizedMeanSquaredError(x_actual, x_estimated):
+    '''
+    Perform normalized mean-squared error.
+
+    Parameters
+    ----------
+    x_actual : numpy.ndarray
+        Actual array.
+    x_estimated : numpy.ndarray
+        Estimated array.
+
+    Returns
+    -------
+    float
+        Normalized mean-squared error value.
+
+    Notes
+    -----
+    Mean-squared error is computed using the following formula:
+
+    .. math::
+        NMSE(x_{actual}, x_{estimated}) =
+        \\frac{MSE(x_{actual}, x_{estimated})}{NMSE(x_{actual}, 0)}
+    '''
+
+    x_actual_shape = np.shape(x_actual)
+    x_estimated_shape = np.shape(x_estimated)
+
+    if len(x_actual_shape) != 2 or len(x_estimated_shape) != 2:
+        raise ValueError('x_actual and x_estimated must be 2-dimensional')
+
+    MSE_xx = meanSquaredError(x_actual, x_estimated)
+    MSE_x0 = meanSquaredError(x_actual, np.zeros(x_actual_shape))
+
+    return MSE_xx / MSE_x0
+
 def openImage(path):
     '''
     Open image from given ``path`` and split into RGB channels.
@@ -26,7 +103,7 @@ def openImage(path):
 
 def saveImage(img, path):
     '''
-    Open image from given ``path`` and split into RGB channels.
+    Save image at given ``path`` and split into RGB channels.
 
     Parameters
     ----------
@@ -236,7 +313,7 @@ def slidingWindowOperation(channel, window_shape, op='mean'):
 
 def getThreshold(mean_of_median, E1, E2, Imin, Imax):
     '''
-    Identify noisy pixels in channel array.
+    Compute threshold value for noise detection.
 
     Parameters
     ----------
