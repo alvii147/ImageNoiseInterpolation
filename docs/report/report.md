@@ -161,7 +161,7 @@ B_img = combineChannels(Z, G, Z)
 G_img = combineChannels(Z, Z, B)
 ```
 
-Now we can use these to visualize the original image, as well as each individual channel. We use `matplotlib` for visualization.
+Now we can use these to visualize the original image, as well as each individual channel. We use [Matplotlib](https://matplotlib.org) for visualization.
 
 ```python
 fig, axis = plt.subplots(2, 2)
