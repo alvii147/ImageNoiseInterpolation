@@ -1,6 +1,6 @@
 # Image Noise Interpolation
 
-This repository contains the replication of the color image noise interpolation methods to correct impulsive noise, outlined in [this paper](https://ieeexplore.ieee.org/document/1595367). See [documentation](https://alvii147.github.io/ImageNoiseInterpolation/build/html/index.html) for more details, see [report](https://alvii147.github.io/ImageNoiseInterpolation/report/report.html) for walkthrough.
+This repository contains the replication of the color image noise interpolation methods to correct impulsive noise, outlined in [this paper](https://ieeexplore.ieee.org/document/1595367). See [documentation](https://alvii147.github.io/ImageNoiseInterpolation/build/html/index) for more details, see [report](https://alvii147.github.io/ImageNoiseInterpolation/report/ECE_313_Course_Project) for walkthrough.
 
 ## Installation
 
