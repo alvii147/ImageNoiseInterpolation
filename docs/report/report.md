@@ -598,9 +598,9 @@ Add randomized noise to channel.
 **Parameters**
 
 - **channel** (*numpy.ndarray*) – 2-dimensional channel array.
-- **p1** (*float**,* *optional*) – Probability of a pixel being converted to positive impulse noise, should be in the range `[0, 1)`.
-- **p2** (*float**,* *optional*) – Probability of a pixel being converted to negative impulse noise, should be in the range `[0, 1)`.
-- **is_noisy** (*numpy.ndarray**,* *optional*) – 2-dimensional boolean array indicating which pixels should be converted to noise. If not provided, this is randomized.
+- **p1** (*float*, *optional*) – Probability of a pixel being converted to positive impulse noise, should be in the range `[0, 1)`.
+- **p2** (*float*, *optional*) – Probability of a pixel being converted to negative impulse noise, should be in the range `[0, 1)`.
+- **is_noisy** (*numpy.ndarray*, *optional*) – 2-dimensional boolean array indicating which pixels should be converted to noise. If not provided, this is randomized.
 
 **Returns**
 
@@ -712,7 +712,7 @@ Calculate candidate for interpolated pixel using given indices.
 
 - **C** (*numpy.ndarray*) – Primary channel array window.
 - **A** (*numpy.ndarray*) – Secondary channel array window.
-- **idx** (*(**int**,* *int**)*) – Indices to use for computation.
+- **idx** ((*int*, *int*)) – Indices to use for computation.
 
 **Returns**
 
@@ -759,7 +759,7 @@ Calculate deference of candidate for interpolated pixel using given indices.
 
 - **C** (*numpy.ndarray*) – Primary channel array window.
 - **A** (*numpy.ndarray*) – Secondary channel array window.
-- **idx** (*(**int**,* *int**)*) – Indices to use for computation.
+- **idx** ((*int*, *int*)) – Indices to use for computation.
 
 **Returns**
 
