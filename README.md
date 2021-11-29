@@ -1,6 +1,6 @@
 # Image Noise Interpolation
 
-This repository contains the replication of the color image noise interpolation methods outlined by [this paper](https://ieeexplore.ieee.org/document/1595367). See [documentation](https://alvii147.github.io/ImageNoiseInterpolation/build/html/index.html) for more details.
+This repository contains the replication of the color image noise interpolation methods to correct impulsive noise, outlined in [this paper](https://ieeexplore.ieee.org/document/1595367). See [documentation](https://alvii147.github.io/ImageNoiseInterpolation/build/html/index.html) for more details, see [report](https://alvii147.github.io/ImageNoiseInterpolation/report/report.html) for walkthrough.
 
 ## Installation
 
@@ -8,7 +8,12 @@ Clone the repository,
 
 ```bash
 git clone https://github.com/alvii147/ImageNoiseInterpolation.git
-cd ImageNoiseInterpolation
+```
+
+Navigate to cloned directory,
+
+```bash
+cd ImageNoiseInterpolation/
 ```
 
 Set up and activate Python virtual environment (optional),
@@ -27,7 +32,7 @@ Install dependencies,
 pip3 install -r requirements.txt
 ```
 
-## Demo
+## Quickstart
 
 ### Original Image
 
