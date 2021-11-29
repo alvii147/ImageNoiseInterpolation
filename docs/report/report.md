@@ -443,16 +443,21 @@ It is, however, important to remember the context of these results. The noise us
 
 ### Appendix A: Installation Instructions
 
-:one: Install **Python** fromhttps://www.python.org/. Most versions will work but version 3.6 or higher is recommended.
+:one: Install Python from the [official Python website](https://www.python.org). The source code should be compatible for most versions, but version 3.6 or higher is recommended.
 
-:two: Clone the repository and navigate into repository directory.
+:two: Clone the repository.
 
 ```bash
 git clone https://github.com/alvii147/ImageNoiseInterpolation.git
-cd ImageNoiseInterpolation
 ```
 
-:three: Create and activate a Python **virtual environment** (optional).
+:three: Navigate to cloned directory.
+
+```bash
+cd ImageNoiseInterpolation/
+```
+
+:four: Create and activate a Python virtual environment (optional).
 
 ```bash
 python3 -m venv env
@@ -462,13 +467,13 @@ source env/bin/activate
 source env/Scripts/activate
 ```
 
-:four: Install Python library dependencies.
+:five: Install Python library dependencies.
 
 ```bash
 pip3 install -r requirements.txt
 ```
 
-:five: Install visualization dependencies (needed for following along with visualization of results on the report, not for usage).
+:six: Install visualization dependencies (needed for following along with visualization of results on the report, not for usage).
 
 ```bash
 pip3 install -r docs/report/report_requirements.txt
