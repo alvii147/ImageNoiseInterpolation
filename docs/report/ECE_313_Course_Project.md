@@ -47,7 +47,7 @@ where $k = \{R, G, B\}$, $s_k(i, j)$ is the original, uncorrupted pixel, and $p_
 
 Detection of this noise can be done by sliding a window of size $N \times N$ across the pixels and computing the following:
 $$
-\Large | x_k(i, j) - x_k^{MED}(i, j) | \gt \varepsilon
+\large | x_k(i, j) - x_k^{MED}(i, j) | \gt \varepsilon
 $$
 where $x_k^{MED}(i, j)$ is the median pixel value within the $N \times N$ window and $\varepsilon$ is a given threshold value. If this condition is fulfilled for a pixel, it is labelled "noisy".
 
@@ -56,7 +56,7 @@ where $x_k^{MED}(i, j)$ is the median pixel value within the $N \times N$ window
 
 The value of $\varepsilon$ is calculated as follows:
 $$
-\Large \varepsilon = \begin{cases}
+\large \varepsilon = \begin{cases}
 \varepsilon_1, & \bar{x}_k^{MED}(i, j) \gt I_{max} \:\: \text{or} \:\: \bar{x}_k^{MED}(i, j) \lt I_{min} \\[5pt]
 \varepsilon_2, & \:\: \text{otherwise}
 \end{cases}
@@ -74,7 +74,7 @@ $I_{max}$ | $205$
 
 Once we have identified noisy pixels, we perform the interpolation method outlined in the research paper. This process involves sliding a $3 \times 3$ sized window across the pixels and computing the following values:
 $$
-\Large \hat{C}[4] = \frac{C[k] + C[l]}{2} + \frac{-A_i[k] + 2A_i[4] - A_i[l]}{2}
+\large \hat{C}[4] = \frac{C[k] + C[l]}{2} + \frac{-A_i[k] + 2A_i[4] - A_i[l]}{2}
 $$
 where $(k,\:l)$ take values of $\{(0, 8),\:(1, 7),\:(2, 6),\:(3, 5)\}$ and $i$ takes values of $1,\:2$. $C$ is $3 \times 3$ window of the channel that is undergoing interpolation, while $A_1$ and $A_2$ are $3 \times 3$ windows of the other two channels.
 
@@ -106,14 +106,14 @@ If this process yields only one candidate that does not use a noisy pixel for it
 
 If this process yields more than one qualifying candidates, we compute the deference value $\hat{C}_{def}[4]$, given by the following formula:
 $$
-\Large \hat{C}_{def}[4] = \abs{\abs{C[k] - C[l]} - \abs{A_i[k] - A_i[l]}}
+\large \hat{C}_{def}[4] = \abs{\abs{C[k] - C[l]} - \abs{A_i[k] - A_i[l]}}
 $$
 Once we compute this for all qualifying candidates, we choose the candidate that has the lowest value of $\hat{C}_{def}[4]$ to replace the $C[4]$ pixel.
 
 If the process of disqualifying candidates that use noisy pixels for computation yields no candidate, we repeat the procedure described above while disregarding the affect of $A_i$. That is, we repeat the process again by computing the following:
 $$
-\Large \hat{C}[4] = \frac{C[k] + C[l]}{2} \\[10pt]
-\Large \hat{C}_{def}[4] = \abs{C[k] - C[l]}
+\large \hat{C}[4] = \frac{C[k] + C[l]}{2} \\[10pt]
+\large \hat{C}_{def}[4] = \abs{C[k] - C[l]}
 $$
 
 > :scroll: **Note**
@@ -501,7 +501,7 @@ Perform mean-squared error.
 
 Mean-squared error is computed using the following formula:
 $$
-\Large MSE(x_{actual}, x_{estimated}) = \frac{1}{N} \sum\limits_i (x_{actual} - x_{estimated})^2
+\large MSE(x_{actual}, x_{estimated}) = \frac{1}{N} \sum\limits_i (x_{actual} - x_{estimated})^2
 $$
 
 ---
@@ -526,7 +526,7 @@ Perform normalized mean-squared error.
 
 Mean-squared error is computed using the following formula:
 $$
-\Large NMSE(x_{actual}, x_{estimated}) = \frac{MSE(x_{actual}, x_{estimated})}{NMSE(x_{actual}, 0)}
+\large NMSE(x_{actual}, x_{estimated}) = \frac{MSE(x_{actual}, x_{estimated})}{NMSE(x_{actual}, 0)}
 $$
 
 ---
@@ -611,7 +611,7 @@ Add randomized noise to channel.
 
 This is an implementation of salt and pepper noise. A color channel pixel $x_k(i, j)$ corrupted by impulsive noise is given by:
 $$
-\Large x_k(i, j) = \begin{cases}
+\large x_k(i, j) = \begin{cases}
 s_k(i, j), & 1 - p_1 - p_2 \\[5pt]
 255, & p_1 \\[5pt]
 0, & p_2
@@ -663,7 +663,7 @@ Compute threshold value for noise detection.
 
 `E` is calculated using the following formula:
 $$
-\Large \varepsilon = \begin{cases}
+\large \varepsilon = \begin{cases}
 \varepsilon_1, & \bar{x}_k^{MED}(i, j) \gt I_{max} \:\:
 \text{or} \:\: \bar{x}_k^{MED}(i, j) \lt I_{min} \\[5pt]
 \varepsilon_2, & \:\: \text{otherwise}
@@ -699,7 +699,7 @@ Identify noisy pixels in channel array.
 
 Noise is detected by comparing each pixel in given channel `C` to median of `NxN` window surrounding the pixel. A pixel $x_k(i, j)$ is labelled noise if it satisfies the following condition:
 $$
-\Large |x_k(i, j) - x_k^{MED}(i, j)| \gt \varepsilon
+\large |x_k(i, j) - x_k^{MED}(i, j)| \gt \varepsilon
 $$
 where $x_k^{MED}(i, j)$ is the median within the `NxN` window and $\varepsilon$ is threshold, `E`, which is calculated using `E1`, `E2`, `Imin` and `Imax`. For more information, see `getThreshold`.
 
@@ -723,7 +723,7 @@ Calculate candidate for interpolated pixel using given indices.
 
 Candidates are calculated using the following computations:
 $$
-\Large \begin{align*}
+\large \begin{align*}
 \hat{C}[4] &= \frac{C[k] + C[l]}{2} \\[5pt]
 \hat{C}[4] &= \frac{C[k] + C[l]}{2} + \frac{-A[k] + 2A[4] - A[l]}{2}
 \end{align*}
@@ -770,7 +770,7 @@ Calculate deference of candidate for interpolated pixel using given indices.
 
 Candidates are calculated using the following computations:
 $$
-\Large \begin{align*}
+\large \begin{align*}
 \hat{C}_{def}[4] &= \abs{C[k] - C[l]} \\[5pt]
 \hat{C}_{def}[4] &= \abs{\abs{C[k] - C[l]} - \abs{A[k] - A[l]}}
 \end{align*}
