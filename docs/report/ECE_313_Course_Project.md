@@ -437,7 +437,7 @@ As we can see, the normalized mean-squared error was significantly reduced by th
 
 ### Limitations
 
-It is, however, important to remember the context of these results. The noise used in this report was salt and pepper noise, which involves noise that is sharp, and either very high or very low in value. If an image is affected by noise that can vary between a large range of values, this method may not be appropriate. Additionally, this method is based on the assumption of correlation between the RGB channels of an image. If no such correlation exists for an image, this method will likely not perform well.
+It is, however, important to remember the context of these results. The noise used in this report was salt-and-pepper noise, which involves noise that is sharp, and either very high or very low in value. If an image is affected by noise that can vary between a large range of values, this method may not be appropriate. Additionally, this method is based on the assumption of correlation between the RGB channels of an image. If no such correlation exists for an image, this method will likely not perform well.
 
 ## Appendices
 
@@ -609,7 +609,7 @@ Add randomized noise to channel.
 
 **Notes**
 
-This is an implementation of salt and pepper noise. A color channel pixel $x_k(i, j)$ corrupted by impulsive noise is given by:
+This is an implementation of salt-and-pepper noise. A color channel pixel $x_k(i, j)$ corrupted by impulsive noise is given by:
 $$
 \large x_k(i, j) = \begin{cases}
 s_k(i, j), & 1 - p_1 - p_2 \\[5pt]
@@ -828,3 +828,6 @@ Interpolate pixels for channel where noisy pixels are present.
 [1] Y. Wakabayashi, A. Taguchi. (2005, December). *Impulsive Noise Removal Using Interpolation Technique in Color Images*. Available https://ieeexplore.ieee.org/document/1595367
 
 [2] Fictspedia Wiki. (2012). *Birb* [Online]. Available https://fictspedia.fandom.com/wiki/Birb
+
+
+
