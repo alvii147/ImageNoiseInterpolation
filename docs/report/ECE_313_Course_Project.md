@@ -532,7 +532,7 @@ $$
 ---
 
 <span style="font-family: monospace; font-weight: bold;"><span style="color: blue;">utils.</span><span style="font-size: 15pt;"><span style="color: orange;">openImage</span>(<span style="color: darkblue;">path</span>)</span></span>
-Open image from given `path` and split into RGB channels.
+Open image from given `path`.
 
 **Parameters**
 
@@ -549,7 +549,7 @@ Open image from given `path` and split into RGB channels.
 ---
 
 <span style="font-family: monospace; font-weight: bold;"><span style="color: blue;">utils.</span><span style="font-size: 15pt;"><span style="color: orange;">saveImage</span>(<span style="color: darkblue;">img</span>, <span style="color: darkblue;">path</span>)</span></span>
-Save image at given `path` and split into RGB channels.
+Save image at given `path`.
 
 **Parameters**
 
