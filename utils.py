@@ -80,7 +80,7 @@ def normalizedMeanSquaredError(x_actual, x_estimated):
 
 def openImage(path):
     '''
-    Open image from given ``path`` and split into RGB channels.
+    Open image from given ``path``.
 
     Parameters
     ----------
@@ -103,7 +103,7 @@ def openImage(path):
 
 def saveImage(img, path):
     '''
-    Save image at given ``path`` and split into RGB channels.
+    Save image at given ``path``.
 
     Parameters
     ----------
