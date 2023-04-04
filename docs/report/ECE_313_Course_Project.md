@@ -106,14 +106,14 @@ If this process yields only one candidate that does not use a noisy pixel for it
 
 If this process yields more than one qualifying candidates, we compute the deference value $\hat{C}_{def}[4]$, given by the following formula:
 $$
-\large \hat{C}_{def}[4] = \abs{\abs{C[k] - C[l]} - \abs{A_i[k] - A_i[l]}}
+\large \hat{C}_{def}[4] = ||C[k] - C[l]| - |A_i[k] - A_i[l]||
 $$
 Once we compute this for all qualifying candidates, we choose the candidate that has the lowest value of $\hat{C}_{def}[4]$ to replace the $C[4]$ pixel.
 
 If the process of disqualifying candidates that use noisy pixels for computation yields no candidate, we repeat the procedure described above while disregarding the affect of $A_i$. That is, we repeat the process again by computing the following:
 $$
 \large \hat{C}[4] = \frac{C[k] + C[l]}{2} \\[10pt]
-\large \hat{C}_{def}[4] = \abs{C[k] - C[l]}
+\large \hat{C}_{def}[4] = |C[k] - C[l]|
 $$
 
 > :scroll: **Note**
@@ -157,8 +157,8 @@ R, G, B = splitChannels(img)
 Z = np.zeros(R.shape, dtype=np.uint8)
 
 R_img = combineChannels(R, Z, Z)
-B_img = combineChannels(Z, G, Z)
-G_img = combineChannels(Z, Z, B)
+G_img = combineChannels(Z, G, Z)
+B_img = combineChannels(Z, Z, B)
 ```
 
 Now we can use these to visualize the original image, as well as each individual channel. We use [Matplotlib](https://matplotlib.org) for visualization.
@@ -174,13 +174,13 @@ axis[0, 0].set_title('Original Image')
 axis[0, 1].imshow(R_img, interpolation='nearest')
 axis[0, 1].set_title('Channel R')
 
-axis[1, 0].imshow(B_img, interpolation='nearest')
-axis[1, 0].set_title('Channel R')
+axis[1, 0].imshow(G_img, interpolation='nearest')
+axis[1, 0].set_title('Channel G')
 
-axis[1, 1].imshow(G_img, interpolation='nearest')
+axis[1, 1].imshow(B_img, interpolation='nearest')
 axis[1, 1].set_title('Channel B')
 
-plt.show()
+plt.savefig('img/clean_plot.png')
 ```
 
 ![Clean Plot](img/clean_plot.png)
@@ -421,13 +421,13 @@ print('NMSE(Original, Interpolated) [B]\t',
 ```
 
 ```
-NMSE(Original, Noisy) [R]                0.19376270094887044
-NMSE(Original, Noisy) [G]                0.19961825794858304
-NMSE(Original, Noisy) [B]                0.19813878006288105
+NMSE(Original, Noisy) [R]                0.1953512126060889
+NMSE(Original, Noisy) [G]                0.19606446075622092
+NMSE(Original, Noisy) [B]                0.20115125279937243
 
-NMSE(Original, Interpolated) [R]         0.04013685593453567
-NMSE(Original, Interpolated) [G]         0.03881058949668718
-NMSE(Original, Interpolated) [B]         0.04334819242833788
+NMSE(Original, Interpolated) [R]         0.03503412604591426
+NMSE(Original, Interpolated) [G]         0.036247751865540544
+NMSE(Original, Interpolated) [B]         0.05001249546809563
 ```
 
 > :scroll: **Note**

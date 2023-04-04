@@ -29,8 +29,8 @@ R, G, B = splitChannels(img)
 Z = np.zeros(R.shape, dtype=np.uint8)
 
 R_img = combineChannels(R, Z, Z)
-B_img = combineChannels(Z, G, Z)
-G_img = combineChannels(Z, Z, B)
+G_img = combineChannels(Z, G, Z)
+B_img = combineChannels(Z, Z, B)
 
 # /////////////////////////////////////////////////////////////////////////
 
@@ -44,10 +44,10 @@ axis[0, 0].set_title('Original Image')
 axis[0, 1].imshow(R_img, interpolation='nearest')
 axis[0, 1].set_title('Channel R')
 
-axis[1, 0].imshow(B_img, interpolation='nearest')
-axis[1, 0].set_title('Channel R')
+axis[1, 0].imshow(G_img, interpolation='nearest')
+axis[1, 0].set_title('Channel G')
 
-axis[1, 1].imshow(G_img, interpolation='nearest')
+axis[1, 1].imshow(B_img, interpolation='nearest')
 axis[1, 1].set_title('Channel B')
 
 plt.savefig('img/clean_plot.png')
